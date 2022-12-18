@@ -8,8 +8,7 @@ Example request body:
 ```json
 [
   "example.eth",
-  "hello.world.eth",
-  ...
+  "hello.world.eth"
 ]
 ```
 
@@ -19,8 +18,7 @@ Example request body:
 ```json
 [
   "0xa2f...",
-  "0xcf1...",
-  ...
+  "0xcf1..."
 ]
 ```
 
@@ -33,7 +31,7 @@ Example response body:
   },
   {
     "node": "0xcf1...",
-    "domain": "hello.world.eth",
-  },
+    "domain": "hello.world.eth"
+  }
 ]
 ```
