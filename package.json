@@ -1,0 +1,15 @@
+{
+  "name": "@polywrap/reverse-namehash-service",
+  "version": "0.1.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "cargo build",
+    "package": "npx serverless package",
+    "deploy": "npx serverless deploy"
+  },
+  "devDependencies": {
+    "serverless": "3.23.0",
+    "serverless-domain-manager": "6.2.0",
+    "serverless-rust": "0.3.8"
+  }
+}

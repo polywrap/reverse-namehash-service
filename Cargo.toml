@@ -1,0 +1,2 @@
+[workspace]
+members = ["rust/add", "rust/resolve", "rust/ens_nodes_db"]

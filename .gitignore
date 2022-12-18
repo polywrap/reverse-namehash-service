@@ -1,0 +1,17 @@
+target
+node_modules
+bin
+build
+dist
+
+# Environment
+.env
+
+# Logging
+*.log
+
+# Test
+coverage
+
+# Serverless
+.serverless

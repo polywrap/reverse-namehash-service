@@ -1,0 +1,85 @@
+service: reverse-namehash-service
+provider:
+  name: aws
+  stage: dev
+  region: us-east-1
+  memorySize: 128
+  timeout: 3
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:BatchGetItem
+            - dynamodb:BatchWriteItem
+          Resource:
+            - Fn::GetAtt: [ EnsNodesTable, Arn ]
+  environment:
+    ENS_NODES_TABLE: ${self:custom.ensNodesTable}
+
+package: 
+  individually: true
+
+custom:
+  rust:
+    dockerless: true
+  customDomain:
+    domainName: reverse-namehash.wrappers.dev
+    stage: ${self:provider.stage}
+    certificateName: wrappers.dev
+    createRoute53Record: true
+  dynamodb:
+    start:
+      migrate: true
+    stages:
+      - dev
+  ensNodesTable: 'ens-nodes-table-${sls:stage}'
+
+plugins:
+  - serverless-domain-manager
+  - serverless-rust
+
+functions:
+  add:
+    handler: add
+    runtime: rust
+    package:
+      exclude:
+        - /**
+      include:
+        - ./rust/add/**
+    events:
+      - http:
+          path: /add
+          method: post
+          cors: true
+    environment:
+      ENS_NODES_TABLE: ${self:custom.ensNodesTable}
+  resolve:
+    handler: resolve
+    runtime: rust
+    package:
+      exclude:
+        - /**
+      include:
+        - ./rust/resolve/**
+    events:
+      - http:
+          path: /resolve
+          method: post
+          cors: true
+    environment:
+      ENS_NODES_TABLE: ${self:custom.ensNodesTable}
+resources:
+  Resources:
+    EnsNodesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: node
+            AttributeType: S
+        KeySchema:
+          - AttributeName: node
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.ensNodesTable}
